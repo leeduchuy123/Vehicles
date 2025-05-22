@@ -1,0 +1,12 @@
+Admin :
+    1. fix search add , creat Quan Li thuong tien :
+    2. add them Loai Vi pham Nhieu nhat : 
+    3. 10 bản ghi 1 trang : OK
+    4. Validate BienSoxe (29A-123.45) : OK
+
+
+
+User :
+    1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : 
+    2. Trang Chủ : + Top Hành Vi vi phạm nhiều nhất trong ngày , trong tháng : Ok
+                   + 
