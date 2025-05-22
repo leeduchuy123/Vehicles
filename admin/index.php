@@ -23,6 +23,11 @@ $payment_stats = get_payment_stats($conn);
 
 // Get top violating vehicles
 $top_vehicles = get_top_violating_vehicles($conn, 5);
+
+// Get top violation categories
+$top_categories_day = get_top_violation_categories_by_day($conn);
+$top_categories_month = get_top_violation_categories_by_month($conn);
+$top_categories_all = get_top_violation_categories($conn, 4);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -171,7 +176,7 @@ $top_vehicles = get_top_violating_vehicles($conn, 5);
                 <!-- Content Row -->
                 <div class="row">
                     <!-- Recent Violations -->
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-4 mb-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Vi phạm gần đây</h6>
@@ -222,8 +227,83 @@ $top_vehicles = get_top_violating_vehicles($conn, 5);
                         </div>
                     </div>
 
+                    <!-- Top Violation Behaviors -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card shadow mb-4 h-70">
+                            <div class="card-header py-3 text-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Hành vi vi phạm nhiều nhất</h6>
+                            </div>
+                            <div class="card-body p-2">
+                                <ul class="nav nav-pills nav-justified mb-3" id="topViolationTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="day-tab" data-bs-toggle="pill" data-bs-target="#day" type="button" role="tab">Ngày</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="month-tab" data-bs-toggle="pill" data-bs-target="#month" type="button" role="tab">Tháng</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">Tất cả</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="topViolationTabContent">
+                                    <div class="tab-pane fade show active" id="day" role="tabpanel">
+                                        <?php if (empty($top_categories_day)): ?>
+                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($top_categories_day as $i => $cat): ?>
+                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
+                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
+                                                </h6>
+                                                <div class="progress mb-2">
+                                                    <div class="progress-bar bg-success" role="progressbar"
+                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
+                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="tab-pane fade" id="month" role="tabpanel">
+                                        <?php if (empty($top_categories_month)): ?>
+                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($top_categories_month as $i => $cat): ?>
+                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
+                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
+                                                </h6>
+                                                <div class="progress mb-2">
+                                                    <div class="progress-bar bg-info" role="progressbar"
+                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
+                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="tab-pane fade" id="all" role="tabpanel">
+                                        <?php if (empty($top_categories_all)): ?>
+                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($top_categories_all as $i => $cat): ?>
+                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
+                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
+                                                </h6>
+                                                <div class="progress mb-2">
+                                                    <div class="progress-bar bg-primary" role="progressbar"
+                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
+                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Top Violating Vehicles -->
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-4 mb-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Phương tiện vi phạm nhiều nhất</h6>

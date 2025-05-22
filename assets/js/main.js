@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const licensePlate = document.getElementById("license_plate").value.trim()
 
       // Simple validation for license plate format
-      const licensePlateRegex = /^[0-9]{2}[A-Z]-[0-9]{4,5}$/
+      const licensePlateRegex = /^[0-9]{2}[A-Z]-[0-9]{3}\.[0-9]{2}$/
 
       if (!licensePlateRegex.test(licensePlate)) {
         e.preventDefault()
-        alert("Vui lòng nhập biển số xe đúng định dạng (VD: 30A-12345)")
+        alert("Vui lòng nhập biển số xe đúng định dạng (VD: 29A-123.45)")
       }
     })
   }

@@ -434,4 +434,25 @@ function get_top_violation_categories($conn, $limit = 4) {
     }
     return $categories;
 }
+
+/**
+ * Lấy top N loại xe vi phạm nhiều nhất
+ */
+function get_top_vehicle_types($conn, $limit = 4) {
+    $sql = "SELECT ve.type, COUNT(*) as count
+            FROM violations v
+            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id
+            GROUP BY ve.type
+            ORDER BY count DESC
+            LIMIT ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $types = [];
+    while ($row = $result->fetch_assoc()) {
+        $types[] = $row;
+    }
+    return $types;
+}
 ?>

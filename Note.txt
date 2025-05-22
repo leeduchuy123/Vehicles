@@ -1,6 +1,6 @@
 Admin :
     1. fix search add , creat Quan Li thuong tien :
-    2. add them Loai Vi pham Nhieu nhat : 
+    2. add them Loai Vi pham Nhieu nhat : OK
     3. 10 bản ghi 1 trang : OK
     4. Validate BienSoxe (29A-123.45) : OK
 
