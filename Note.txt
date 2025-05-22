@@ -6,11 +6,12 @@ Admin :
     5. Quản lí thông tin báo cáo : 
     6. Chart Vi pham theo thoi gian : OK
     7. Theo Năm : Tổng số PT theo năm , vi pham , sở hữu , Vi phạm chưa nộp : 
-    8. Fix giao diện Owner :
+    8. Fix giao diện Owner : OK
     9. validate : SDT : Không dc trùng số dt
     9. Chia lại Function admin :
-
-
+    10.Fix Bug Owner : OK
+    11. Them Thong bao Thanh cong khi tạo : 
+    12. Fix Giao Diện Vehicles cho giống owner :
 User :
     1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : 
     2. Trang Chủ : + Top Hành Vi vi phạm nhiều nhất trong ngày , trong tháng : Ok

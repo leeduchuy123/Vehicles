@@ -30,7 +30,6 @@ $stmt->bind_param("i", $owner_id);
 $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
-    // Lấy vi phạm cho từng xe
     $row['violations'] = get_violations_by_vehicle_id($conn, $row['vehicle_id']);
     $vehicles[] = $row;
 }

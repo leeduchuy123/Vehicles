@@ -97,22 +97,28 @@ $total_pages = ceil($total_owners / $limit);
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php if (empty($owners)): ?>
-                                <tr><td colspan="5" class="text-center">Không có dữ liệu.</td></tr>
-                            <?php else: foreach ($owners as $owner): ?>
-                                <tr>
+                        <tbody id="ownersTableBody">
+                            <?php foreach ($owners as $owner): ?>
+                                <tr data-id="<?php echo $owner['owner_id']; ?>">
                                     <td><?php echo $owner['owner_id']; ?></td>
                                     <td><?php echo htmlspecialchars($owner['name']); ?></td>
                                     <td><?php echo htmlspecialchars($owner['phone']); ?></td>
                                     <td><?php echo htmlspecialchars($owner['address']); ?></td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info view-owner" data-id="<?php echo $owner['owner_id']; ?>">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-info view-owner" data-id="<?php echo $owner['owner_id']; ?>">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary edit-owner" data-id="<?php echo $owner['owner_id']; ?>">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger delete-owner" data-id="<?php echo $owner['owner_id']; ?>">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; endif; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -142,12 +148,13 @@ $total_pages = ceil($total_owners / $limit);
     <div class="modal fade" id="addOwnerModal" tabindex="-1" aria-labelledby="addOwnerModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="process_owner.php">
+                <form id="addOwnerForm">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addOwnerModalLabel">Thêm chủ sở hữu mới</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="ownerMessage"></div>
                         <div class="mb-3">
                             <label class="form-label">Tên chủ sở hữu</label>
                             <input type="text" name="name" class="form-control" required>
@@ -164,6 +171,63 @@ $total_pages = ceil($total_owners / $limit);
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Owner Modal -->
+    <div class="modal fade" id="editOwnerModal" tabindex="-1" aria-labelledby="editOwnerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editOwnerForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editOwnerModalLabel">Chỉnh sửa chủ sở hữu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="editOwnerMessage"></div>
+                        <input type="hidden" name="owner_id" id="edit_owner_id">
+                        <div class="mb-3">
+                            <label class="form-label">Tên chủ sở hữu</label>
+                            <input type="text" name="name" id="edit_name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" name="phone" id="edit_phone" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" name="address" id="edit_address" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Owner Modal -->
+    <div class="modal fade" id="deleteOwnerModal" tabindex="-1" aria-labelledby="deleteOwnerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="deleteOwnerForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteOwnerModalLabel">Xác nhận xóa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn có chắc chắn muốn xóa chủ sở hữu này?</p>
+                        <p>Tên: <strong id="delete_owner_name"></strong></p>
+                        <input type="hidden" name="owner_id" id="delete_owner_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xóa</button>
                     </div>
                 </form>
             </div>
@@ -197,7 +261,7 @@ $total_pages = ceil($total_owners / $limit);
     <script>
     $(function() {
         // Xem chi tiết chủ sở hữu
-        $('.view-owner').click(function() {
+        $(document).on('click', '.view-owner', function() {
             const ownerId = $(this).data('id');
             $.get('get_owner_details.php', { id: ownerId }, function(data) {
                 $('#owner_name').text(data.owner.name);
@@ -231,8 +295,125 @@ $total_pages = ceil($total_owners / $limit);
                 $('#viewOwnerModal').modal('show');
             }, 'json');
         });
+
+        // Thêm chủ sở hữu bằng Ajax
+        $('#addOwnerForm').on('submit', function(e) {
+            e.preventDefault();
+            const name = $('input[name="name"]').val().trim();
+            const phone = $('input[name="phone"]').val().trim();
+            const address = $('input[name="address"]').val().trim();
+
+            // Validate phone phía client
+            const phoneRegex = /^(0|\+84)[1-9][0-9]{8}$/;
+            if (!phoneRegex.test(phone)) {
+                $('#ownerMessage').html('<div class="alert alert-danger">Số điện thoại không hợp lệ (phải là số Việt Nam, VD: 0987654321 hoặc +84987654321).</div>');
+                return false;
+            }
+
+            $.ajax({
+                url: 'process_owner.php',
+                type: 'POST',
+                data: { action: 'add', name, phone, address },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.success) {
+                        $('#ownerMessage').html('<div class="alert alert-success">' + res.message + '</div>');
+                        setTimeout(() => { location.reload(); }, 1200);
+                    } else {
+                        $('#ownerMessage').html('<div class="alert alert-danger">' + res.message + '</div>');
+                    }
+                },
+                error: function() {
+                    $('#ownerMessage').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>');
+                }
+            });
+        });
+
+        // Sửa chủ sở hữu
+        $(document).on('click', '.edit-owner', function() {
+            const ownerId = $(this).data('id');
+            $.get('get_owner_details.php', { id: ownerId }, function(data) {
+                $('#edit_owner_id').val(data.owner.owner_id);
+                $('#edit_name').val(data.owner.name);
+                $('#edit_phone').val(data.owner.phone);
+                $('#edit_address').val(data.owner.address);
+                $('#editOwnerMessage').html('');
+                $('#editOwnerModal').modal('show');
+            }, 'json');
+        });
+
+        $('#editOwnerForm').on('submit', function(e) {
+            e.preventDefault();
+            const owner_id = $('#edit_owner_id').val();
+            const name = $('#edit_name').val().trim();
+            const phone = $('#edit_phone').val().trim();
+            const address = $('#edit_address').val().trim();
+
+            const phoneRegex = /^(0|\+84)[1-9][0-9]{8}$/;
+            if (!phoneRegex.test(phone)) {
+                $('#editOwnerMessage').html('<div class="alert alert-danger">Số điện thoại không hợp lệ (phải là số Việt Nam, VD: 0987654321 hoặc +84987654321).</div>');
+                return false;
+            }
+
+            $.ajax({
+                url: 'process_owner.php',
+                type: 'POST',
+                data: { action: 'edit', owner_id, name, phone, address },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.success) {
+                        $('#editOwnerMessage').html('<div class="alert alert-success">' + res.message + '</div>');
+                        setTimeout(() => { location.reload(); }, 1200);
+                    } else {
+                        $('#editOwnerMessage').html('<div class="alert alert-danger">' + res.message + '</div>');
+                    }
+                },
+                error: function() {
+                    $('#editOwnerMessage').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>');
+                }
+            });
+        });
+
+        // Xóa chủ sở hữu
+        $(document).on('click', '.delete-owner', function() {
+            const ownerId = $(this).data('id');
+            const ownerName = $(this).closest('tr').find('td:eq(1)').text();
+            $('#delete_owner_id').val(ownerId);
+            $('#delete_owner_name').text(ownerName);
+            $('#deleteOwnerModal').modal('show');
+        });
+
+        $('#deleteOwnerForm').on('submit', function(e) {
+            e.preventDefault();
+            const owner_id = $('#delete_owner_id').val();
+            $.ajax({
+                url: 'process_owner.php',
+                type: 'POST',
+                data: { action: 'delete', owner_id },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.success) {
+                        $('#deleteOwnerModal').modal('hide');
+                        setTimeout(() => { location.reload(); }, 800);
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra, vui lòng thử lại.');
+                }
+            });
+        });
+
+        // Reset form và thông báo khi mở modal
+        $('#addOwnerModal').on('show.bs.modal', function () {
+            $('#ownerMessage').html('');
+            $('#addOwnerForm')[0].reset();
+        });
+        $('#editOwnerModal').on('show.bs.modal', function () {
+            $('#editOwnerMessage').html('');
+        });
     });
     </script>
-
 </body>
 </html>

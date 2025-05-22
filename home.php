@@ -30,7 +30,7 @@ if ($mode === 'month') {
 <body>
     <?php include 'includes/header.php'; ?>
 
-    <div class="container mt-5">
+    <div class="container mt-5 ">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8">
                 <div class="card shadow">
