@@ -13,21 +13,23 @@ if (!isset($_SESSION['user_id'])) {
 error_log("User ID in session: " . $_SESSION['user_id']);
 error_log("Username in session: " . $_SESSION['username']);
 
+// Lấy năm từ query string, mặc định là năm hiện tại
+$selected_year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+$violations_by_month = get_violations_count_by_month($conn, $selected_year);
+
 // Get statistics for dashboard
 $total_vehicles = get_total_count($conn, 'vehicles');
-$total_violations = get_total_count($conn, 'violations');
+$total_violations = get_total_count($conn, 'violations' , $selected_year);
 $total_owners = get_total_count($conn, 'owners');
 $unpaid_violations = get_unpaid_violations_count($conn);
-$recent_violations = get_recent_violations($conn, 5);
-$payment_stats = get_payment_stats($conn);
 
-// Get top violating vehicles
-$top_vehicles = get_top_violating_vehicles($conn, 5);
-
-// Get top violation categories
-$top_categories_day = get_top_violation_categories_by_day($conn);
-$top_categories_month = get_top_violation_categories_by_month($conn);
-$top_categories_all = get_top_violation_categories($conn, 4);
+// Truyền $selected_year vào các function dưới đây
+$recent_violations = get_recent_violations($conn, 5, $selected_year);
+$payment_stats = get_payment_stats($conn, $selected_year);
+$top_vehicles = get_top_violating_vehicles($conn, 5, $selected_year);
+$top_categories_day = get_top_violation_categories_by_day($conn, null, 4, $selected_year);
+$top_categories_month = get_top_violation_categories_by_month($conn, null, $selected_year, 4);
+$top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -58,6 +60,21 @@ $top_categories_all = get_top_violation_categories($conn, 4);
                             <i class="bi bi-calendar"></i> Tuần này
                         </button>
                     </div>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center mb-3">
+                    <form method="get" class="d-flex align-items-center">
+                        <label for="yearSelect" class="me-2 mb-0 fw-bold">Chọn năm:</label>
+                        <select name="year" id="yearSelect" class="form-select form-select-sm me-2" style="width:auto;" onchange="this.form.submit()">
+                            <?php
+                            $currentYear = date('Y');
+                            for ($y = $currentYear; $y >= $currentYear - 10; $y--) {
+                                echo '<option value="'.$y.'"'.($selected_year == $y ? ' selected' : '').'>'.$y.'</option>';
+                            }
+                            ?>
+                        </select>
+                        <noscript><button type="submit" class="btn btn-sm btn-primary">Xem</button></noscript>
+                    </form>
                 </div>
                 
                 <!-- Stats Cards -->
@@ -351,7 +368,9 @@ $top_categories_all = get_top_violation_categories($conn, 4);
                     pointHoverBorderColor: "rgba(78, 115, 223, 1)",
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [0, 10, 5, 15, 10, 20, 15, 25, 20, 30, 25, 40],
+                    data: [
+                        <?php echo implode(',', $violations_by_month); ?>
+                    ],
                 }],
             },
             options: {

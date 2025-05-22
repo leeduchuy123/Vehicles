@@ -103,22 +103,32 @@ function get_unpaid_violations_count($conn) {
 /**
  * Get recent violations with vehicle info
  */
-function get_recent_violations($conn, $limit = 5) {
+function get_recent_violations($conn, $limit = 5, $year = null) {
     $sql = "SELECT v.*, ve.license_plate 
             FROM violations v 
-            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id 
-            ORDER BY v.violation_date DESC 
-            LIMIT ?";
+            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id";
+    $params = [];
+    $types = "";
+
+    if ($year !== null) {
+        $sql .= " WHERE YEAR(v.violation_date) = ?";
+        $params[] = $year;
+        $types .= "i";
+    }
+
+    $sql .= " ORDER BY v.violation_date DESC LIMIT ?";
+    $params[] = $limit;
+    $types .= "i";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $limit);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $violations = [];
     while ($row = $result->fetch_assoc()) {
         $violations[] = $row;
     }
-    
     return $violations;
 }
 
@@ -154,23 +164,34 @@ function get_payment_stats($conn) {
 /**
  * Get top violating vehicles
  */
-function get_top_violating_vehicles($conn, $limit = 5) {
+function get_top_violating_vehicles($conn, $limit = 5, $year = null) {
     $sql = "SELECT v.vehicle_id, ve.license_plate, COUNT(*) as violation_count 
             FROM violations v 
-            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id 
-            GROUP BY v.vehicle_id 
-            ORDER BY violation_count DESC 
-            LIMIT ?";
+            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id";
+    $params = [];
+    $types = "";
+
+    if ($year !== null) {
+        $sql .= " WHERE YEAR(v.violation_date) = ?";
+        $params[] = $year;
+        $types .= "i";
+    }
+
+    $sql .= " GROUP BY v.vehicle_id 
+              ORDER BY violation_count DESC 
+              LIMIT ?";
+    $params[] = $limit;
+    $types .= "i";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $limit);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $vehicles = [];
     while ($row = $result->fetch_assoc()) {
         $vehicles[] = $row;
     }
-    
     return $vehicles;
 }
 
@@ -371,18 +392,30 @@ function log_action($conn, $user_id, $action, $target_table, $target_id) {
 /**
  * Lấy top 4 hành vi vi phạm nhiều nhất theo ngày (trong ngày hiện tại)
  */
-function get_top_violation_categories_by_day($conn, $date = null, $limit = 4) {
+function get_top_violation_categories_by_day($conn, $date = null, $limit = 4, $year = null) {
     if ($date === null) {
         $date = date('Y-m-d');
     }
     $sql = "SELECT description, COUNT(*) as count
             FROM violations
-            WHERE DATE(violation_date) = ?
-            GROUP BY description
-            ORDER BY count DESC
-            LIMIT ?";
+            WHERE DATE(violation_date) = ?";
+    $params = [$date];
+    $types = "s";
+
+    if ($year !== null) {
+        $sql .= " AND YEAR(violation_date) = ?";
+        $params[] = $year;
+        $types .= "i";
+    }
+
+    $sql .= " GROUP BY description
+              ORDER BY count DESC
+              LIMIT ?";
+    $params[] = $limit;
+    $types .= "i";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $date, $limit);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
     $categories = [];
@@ -418,14 +451,26 @@ function get_top_violation_categories_by_month($conn, $month = null, $year = nul
 /**
  * Lấy top N hành vi vi phạm nhiều nhất (tất cả)
  */
-function get_top_violation_categories($conn, $limit = 4) {
+function get_top_violation_categories($conn, $limit = 4, $year = null) {
     $sql = "SELECT description, COUNT(*) as count
-            FROM violations
-            GROUP BY description
-            ORDER BY count DESC
-            LIMIT ?";
+            FROM violations";
+    $params = [];
+    $types = "";
+
+    if ($year !== null) {
+        $sql .= " WHERE YEAR(violation_date) = ?";
+        $params[] = $year;
+        $types .= "i";
+    }
+
+    $sql .= " GROUP BY description
+              ORDER BY count DESC
+              LIMIT ?";
+    $params[] = $limit;
+    $types .= "i";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $limit);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
     $categories = [];
@@ -438,21 +483,137 @@ function get_top_violation_categories($conn, $limit = 4) {
 /**
  * Lấy top N loại xe vi phạm nhiều nhất
  */
-function get_top_vehicle_types($conn, $limit = 4) {
+function get_top_vehicle_types($conn, $limit = 4, $year = null) {
     $sql = "SELECT ve.type, COUNT(*) as count
             FROM violations v
-            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id
-            GROUP BY ve.type
-            ORDER BY count DESC
-            LIMIT ?";
+            JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id";
+    $params = [];
+    $types = "";
+
+    if ($year !== null) {
+        $sql .= " WHERE YEAR(v.violation_date) = ?";
+        $params[] = $year;
+        $types .= "i";
+    }
+
+    $sql .= " GROUP BY ve.type
+              ORDER BY count DESC
+              LIMIT ?";
+    $params[] = $limit;
+    $types .= "i";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $limit);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
-    $types = [];
+    $typesArr = [];
     while ($row = $result->fetch_assoc()) {
-        $types[] = $row;
+        $typesArr[] = $row;
     }
-    return $types;
+    return $typesArr;
 }
+
+/**
+ * Get violations count by month
+ */
+function get_violations_count_by_month($conn, $year = null) {
+    if ($year === null) $year = date('Y');
+    $sql = "SELECT MONTH(violation_date) as month, COUNT(*) as count
+            FROM violations
+            WHERE YEAR(violation_date) = ?
+            GROUP BY MONTH(violation_date)
+            ORDER BY month";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $year);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = array_fill(1, 12, 0); // Khởi tạo 12 tháng = 0
+    while ($row = $result->fetch_assoc()) {
+        $data[(int)$row['month']] = (int)$row['count'];
+    }
+    return $data;
+}
+
+/**
+ * Get violations with pagination, search and filter
+ */
+// function get_violations($conn, $limit = 10, $offset = 0, $search = '', $filter_status = '') {
+//     $sql = "SELECT v.*, ve.license_plate 
+//             FROM violations v 
+//             JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id";
+//     $params = [];
+//     $types = "";
+
+//     $where = [];
+//     if ($search !== '') {
+//         $where[] = "(ve.license_plate LIKE ? OR v.description LIKE ?)";
+//         $params[] = "%$search%";
+//         $params[] = "%$search%";
+//         $types .= "ss";
+//     }
+//     if ($filter_status === 'unpaid') {
+//         $sql .= " LEFT JOIN payments p ON v.violation_id = p.violation_id";
+//         $where[] = "(p.payment_id IS NULL OR p.status != 'Completed')";
+//     } elseif ($filter_status === 'paid') {
+//         $sql .= " LEFT JOIN payments p ON v.violation_id = p.violation_id";
+//         $where[] = "p.status = 'Completed'";
+//     }
+//     if ($where) {
+//         $sql .= " WHERE " . implode(" AND ", $where);
+//     }
+//     $sql .= " ORDER BY v.violation_date DESC LIMIT ? OFFSET ?";
+//     $params[] = $limit;
+//     $params[] = $offset;
+//     $types .= "ii";
+
+//     $stmt = $conn->prepare($sql);
+//     $stmt->bind_param($types, ...$params);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+
+//     $violations = [];
+//     while ($row = $result->fetch_assoc()) {
+//         $violations[] = $row;
+//     }
+
+//     return $violations;
+// }
+
+// /**
+//  * Get violations count
+//  */
+// function get_violations_count($conn, $search = '', $filter_status = '') {
+//     $sql = "SELECT COUNT(*) as count
+//             FROM violations v
+//             JOIN vehicles ve ON v.vehicle_id = ve.vehicle_id";
+//     $params = [];
+//     $types = "";
+
+//     $where = [];
+//     if ($search !== '') {
+//         $where[] = "(ve.license_plate LIKE ? OR v.description LIKE ?)";
+//         $params[] = "%$search%";
+//         $params[] = "%$search%";
+//         $types .= "ss";
+//     }
+//     if ($filter_status === 'unpaid') {
+//         $sql .= " LEFT JOIN payments p ON v.violation_id = p.violation_id";
+//         $where[] = "(p.payment_id IS NULL OR p.status != 'Completed')";
+//     } elseif ($filter_status === 'paid') {
+//         $sql .= " LEFT JOIN payments p ON v.violation_id = p.violation_id";
+//         $where[] = "p.status = 'Completed'";
+//     }
+//     if ($where) {
+//         $sql .= " WHERE " . implode(" AND ", $where);
+//     }
+
+//     $stmt = $conn->prepare($sql);
+//     if ($types) {
+//         $stmt->bind_param($types, ...$params);
+//     }
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+//     $row = $result->fetch_assoc();
+//     return $row['count'];
+// }
 ?>

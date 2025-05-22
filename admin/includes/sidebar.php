@@ -2,8 +2,8 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="index.php">
-                    <i class="bi bi-speedometer2"></i> Bảng điều khiển
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="reports.php">
+                    <i class="bi bi-bar-chart"></i> Báo cáo & Thống kê
                 </a>
             </li>
             <li class="nav-item">
@@ -26,11 +26,7 @@
                     <i class="bi bi-cash-stack"></i> Quản lý thanh toán
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>" href="reports.php">
-                    <i class="bi bi-bar-chart"></i> Báo cáo & Thống kê
-                </a>
-            </li>
+        
         </ul>
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
