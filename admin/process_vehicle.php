@@ -62,46 +62,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Edit vehicle
     else if ($action === 'edit') {
         $vehicle_id = (int)$_POST['vehicle_id'];
-        $license_plate = strtoupper(trim($_POST['license_plate']));
-
-        // Kiểm tra định dạng biển số xe Việt Nam
-        if (!preg_match('/^([0-9]{2}[A-Z]-[0-9]{3,4}\.[0-9]{2}|[0-9]{2}[A-Z][0-9]-[0-9]{4,5})$/i', $license_plate)) {
-            $_SESSION['error'] = 'Biển số xe không đúng định dạng Việt Nam!';
-            header('Location: vehicles.php');
-            exit;
-        }
-
-        // Kiểm tra trùng biển số xe
-        $stmt = $conn->prepare("SELECT vehicle_id FROM vehicles WHERE license_plate = ?");
-        $stmt->bind_param("s", $license_plate);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $_SESSION['error'] = 'Biển số xe đã tồn tại!';
-            header('Location: vehicles.php');
-            exit;
-        }
-
-        $type = sanitize_input($_POST['type']);
-        $brand = sanitize_input($_POST['brand']);
-        $model = sanitize_input($_POST['model']);
-        $color = sanitize_input($_POST['color']);
         $owner_id = (int)$_POST['owner_id'];
         
-        // Update vehicle
-        $sql = "UPDATE vehicles SET owner_id = ?, license_plate = ?, type = ?, brand = ?, model = ?, color = ? 
-                WHERE vehicle_id = ?";
+        // Chỉ cập nhật owner_id
+        $sql = "UPDATE vehicles SET owner_id = ? WHERE vehicle_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isssssi", $owner_id, $license_plate, $type, $brand, $model, $color, $vehicle_id);
+        $stmt->bind_param("ii", $owner_id, $vehicle_id);
         
         if ($stmt->execute()) {
-            // Log action
-            log_action($conn, $_SESSION['user_id'], 'edit', 'vehicles', $vehicle_id);
+            log_activity(
+                $_SESSION['user_id'],
+                'edit',
+                'vehicles',
+                $vehicle_id,
+                ['action' => 'change_owner', 'new_owner_id' => $owner_id]
+            );
             
-            $_SESSION['success'] = "Cập nhật phương tiện thành công.";
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Cập nhật chủ sở hữu thành công!'
+            ]);
         } else {
-            $_SESSION['error'] = "Có lỗi xảy ra: " . $conn->error;
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Có lỗi xảy ra: ' . $conn->error
+            ]);
         }
+        exit;
     }
     
     // Delete vehicle

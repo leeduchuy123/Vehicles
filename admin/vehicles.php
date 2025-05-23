@@ -174,15 +174,16 @@ $owners = get_all_owners($conn);
     </div>
     
     <!-- Add Vehicle Modal -->
-    <div class="modal fade" id="addVehicleModal" tabindex="-1" aria-labelledby="addVehicleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addVehicleModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addVehicleModalLabel">Thêm phương tiện mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addVehicleForm" action="process_vehicle.php" method="post">
+                <form id="addVehicleForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm phương tiện mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="vehicleMessage"></div>
                         <div class="mb-3">
                             <label for="license_plate" class="form-label">Biển số xe *</label>
                             <input type="text" class="form-control" id="license_plate" name="license_plate" required>
@@ -207,75 +208,66 @@ $owners = get_all_owners($conn);
                             <input type="text" class="form-control" id="color" name="color" required>
                         </div>
                         <div class="mb-3">
-                            <label for="owner_id" class="form-label">Chủ sở hữu *</label>
-                            <select class="form-select" id="owner_id" name="owner_id" required>
-                                <option value="">Chọn chủ sở hữu</option>
-                                <?php foreach ($owners as $owner): ?>
-                                    <option value="<?php echo $owner['owner_id']; ?>"><?php echo htmlspecialchars($owner['name']); ?> (<?php echo htmlspecialchars($owner['phone']); ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label for="owner_search" class="form-label">Tìm chủ sở hữu *</label>
+                            <input type="text" class="form-control" id="owner_search" placeholder="Nhập tên hoặc số điện thoại...">
+                            <input type="hidden" name="owner_id" id="owner_id" required>
+                            <div id="owner_search_results" class="list-group mt-2" style="max-height: 200px; overflow-y: auto;">
+                            </div>
+                            <div id="selected_owner_info" class="mt-2"></div>
                         </div>
-                        <input type="hidden" name="action" value="add">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" form="addVehicleForm" class="btn btn-primary">Thêm phương tiện</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
     
     <!-- Edit Vehicle Modal -->
-    <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editVehicleModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editVehicleModalLabel">Chỉnh sửa phương tiện</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editVehicleForm" action="process_vehicle.php" method="post">
+                <form id="editVehicleForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thay đổi chủ sở hữu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="editVehicleMessage"></div>
+                        
+                        <!-- Thông tin xe - Chỉ readonly -->
                         <div class="mb-3">
-                            <label for="edit_license_plate" class="form-label">Biển số xe *</label>
-                            <input type="text" class="form-control" id="edit_license_plate" name="license_plate" required>
+                            <label class="form-label">Biển số xe</label>
+                            <input type="text" class="form-control" id="edit_license_plate" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_type" class="form-label">Loại xe *</label>
-                            <select class="form-select" id="edit_type" name="type" required>
-                                <option value="Car">Ô tô</option>
-                                <option value="Motorcycle">Xe máy</option>
-                            </select>
+                            <label class="form-label">Loại xe</label>
+                            <input type="text" class="form-control" id="edit_type" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_brand" class="form-label">Hãng xe *</label>
-                            <input type="text" class="form-control" id="edit_brand" name="brand" required>
+                            <label class="form-label">Thông tin xe</label>
+                            <input type="text" class="form-control" id="edit_info" readonly>
                         </div>
+
+                        <!-- Chọn chủ sở hữu mới -->
                         <div class="mb-3">
-                            <label for="edit_model" class="form-label">Mẫu xe *</label>
-                            <input type="text" class="form-control" id="edit_model" name="model" required>
+                            <label class="form-label">Tìm chủ sở hữu mới *</label>
+                            <input type="text" class="form-control" id="edit_owner_search" placeholder="Nhập tên hoặc số điện thoại...">
+                            <input type="hidden" name="owner_id" id="edit_owner_id" required>
+                            <div id="edit_owner_search_results" class="list-group mt-2"></div>
+                            <div id="edit_selected_owner_info" class="mt-2"></div>
                         </div>
-                        <div class="mb-3">
-                            <label for="edit_color" class="form-label">Màu sắc *</label>
-                            <input type="text" class="form-control" id="edit_color" name="color" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_owner_id" class="form-label">Chủ sở hữu *</label>
-                            <select class="form-select" id="edit_owner_id" name="owner_id" required>
-                                <option value="">Chọn chủ sở hữu</option>
-                                <?php foreach ($owners as $owner): ?>
-                                    <option value="<?php echo $owner['owner_id']; ?>"><?php echo htmlspecialchars($owner['name']); ?> (<?php echo htmlspecialchars($owner['phone']); ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+
                         <input type="hidden" name="vehicle_id" id="edit_vehicle_id">
                         <input type="hidden" name="action" value="edit">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" form="editVehicleForm" class="btn btn-primary">Lưu thay đổi</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -408,24 +400,30 @@ $owners = get_all_owners($conn);
             // Sử dụng .on() thay vì .click() cho các nút thao tác
             $(document).on('click', '.edit-vehicle', function() {
                 const vehicleId = $(this).data('id');
-                $.ajax({
-                    url: 'get_vehicle.php',
-                    type: 'GET',
-                    data: { id: vehicleId },
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#edit_vehicle_id').val(data.vehicle_id);
-                        $('#edit_license_plate').val(data.license_plate);
-                        $('#edit_type').val(data.type);
-                        $('#edit_brand').val(data.brand);
-                        $('#edit_model').val(data.model);
-                        $('#edit_color').val(data.color);
-                        $('#edit_owner_id').val(data.owner_id);
-                        $('#editVehicleModal').modal('show');
-                    },
-                    error: function() {
-                        alert('Có lỗi xảy ra khi tải dữ liệu phương tiện.');
-                    }
+                $.get('get_vehicle_details.php', {id: vehicleId}, function(data) {
+                    // Hiển thị thông tin xe (readonly)
+                    $('#edit_vehicle_id').val(data.vehicle.vehicle_id);
+                    $('#edit_license_plate').val(data.vehicle.license_plate);
+                    $('#edit_type').val(data.vehicle.type === 'Car' ? 'Ô tô' : 'Xe máy');
+                    $('#edit_info').val(`${data.vehicle.brand} ${data.vehicle.model} - ${data.vehicle.color}`);
+                    
+                    // Hiển thị thông tin chủ sở hữu hiện tại
+                    $('#edit_selected_owner_info').html(`
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Chủ sở hữu hiện tại:</h6>
+                                <p class="card-text">
+                                    <strong>${data.owner.name}</strong><br>
+                                    SĐT: ${data.owner.phone}<br>
+                                    Địa chỉ: ${data.owner.address}
+                                </p>
+                            </div>
+                        </div>
+                    `);
+                    
+                    $('#edit_owner_id').val(data.owner.owner_id);
+                    $('#editVehicleModal').modal('show');
                 });
             });
 
@@ -531,16 +529,221 @@ $owners = get_all_owners($conn);
 
             // Validate biển số xe khi submit form thêm phương tiện
             $('#addVehicleForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize() + '&action=add';
+
+                // Validate biển số xe
                 const plate = $('#license_plate').val().trim();
-                // Định dạng biển số xe Việt Nam (cơ bản, có thể mở rộng)
-                const regex = /^([0-9]{2}[A-Z]-[0-9]{3,4}\.[0-9]{2}|[0-9]{2}[A-Z][0-9]-[0-9]{4,5})$/i;
-                if (!regex.test(plate)) {
-                    alert('Biển số xe không đúng định dạng Việt Nam!');
-                    $('#license_plate').focus();
+                const plateRegex = /^([0-9]{2}[A-Z]-[0-9]{3,4}\.[0-9]{2}|[0-9]{2}[A-Z][0-9]-[0-9]{4,5})$/i;
+                if (!plateRegex.test(plate)) {
+                    $('#vehicleMessage').html('<div class="alert alert-danger">Biển số xe không đúng định dạng Việt Nam!</div>');
+                    return false;
+                }
+
+                // Check if owner is selected
+                if (!$('#owner_id').val()) {
+                    alert('Vui lòng chọn chủ sở hữu!');
+                    $('#owner_search').focus();
                     e.preventDefault();
                     return false;
                 }
-                // Có thể kiểm tra trùng bằng Ajax ở đây nếu muốn realtime
+
+                $.ajax({
+                    url: 'process_vehicle.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.success) {
+                            $('#vehicleMessage').html('<div class="alert alert-success">' + res.message + '</div>');
+                            setTimeout(() => { location.reload(); }, 1200);
+                        } else {
+                            $('#vehicleMessage').html('<div class="alert alert-danger">' + res.message + '</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#vehicleMessage').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>');
+                    }
+                });
+            });
+
+            // Reset form và thông báo khi mở modal
+            $('#addVehicleModal').on('show.bs.modal', function () {
+                $('#vehicleMessage').html('');
+                $('#addVehicleForm')[0].reset();
+            });
+
+            // Thêm vào phần script của vehicles.php
+            let searchTimeout = null;
+
+            $('#owner_search').on('input', function() {
+                const searchText = $(this).val().trim();
+                
+                // Clear previous timeout
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+                
+                // Clear previous results if search is empty
+                if (searchText.length < 2) {
+                    $('#owner_search_results').empty();
+                    return;
+                }
+                
+                // Set new timeout to prevent too many requests
+                searchTimeout = setTimeout(function() {
+                    $.ajax({
+                        url: 'search_owners.php',
+                        type: 'GET',
+                        data: { q: searchText },
+                        success: function(owners) {
+                            let html = '';
+                            owners.forEach(function(owner) {
+                                html += `
+                                    <div class="list-group-item owner-result" 
+                                         data-id="${owner.id}"
+                                         data-name="${owner.name}"
+                                         data-phone="${owner.phone}"
+                                         data-address="${owner.address}">
+                                        <div class="fw-bold">${owner.name}</div>
+                                        <small>${owner.phone}</small>
+                                    </div>
+                                `;
+                            });
+                            $('#owner_search_results').html(html);
+                        },
+                        error: function() {
+                            $('#owner_search_results').html('<div class="list-group-item text-danger">Có lỗi xảy ra</div>');
+                        }
+                    });
+                }, 300); // Delay 300ms
+            });
+
+            // Handle owner selection
+            $(document).on('click', '.owner-result', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const phone = $(this).data('phone');
+                const address = $(this).data('address');
+                
+                // Set hidden input value
+                $('#owner_id').val(id);
+                
+                // Clear search and results
+                $('#owner_search').val('');
+                $('#owner_search_results').empty();
+                
+                // Show selected owner info
+                $('#selected_owner_info').html(`
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Chủ sở hữu đã chọn:</h6>
+                            <p class="card-text">
+                                <strong>${name}</strong><br>
+                                SĐT: ${phone}<br>
+                                Địa chỉ: ${address}
+                            </p>
+                        </div>
+                    </div>
+                `);
+            });
+
+            // Clear results when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#owner_search, #owner_search_results').length) {
+                    $('#owner_search_results').empty();
+                }
+            });
+
+            // Reset owner selection when opening add modal
+            $('#addVehicleModal').on('show.bs.modal', function() {
+                $('#owner_id').val('');
+                $('#owner_search').val('');
+                $('#owner_search_results').empty();
+                $('#selected_owner_info').empty();
+            });
+
+            // Xử lý tìm kiếm chủ sở hữu khi edit
+            let editSearchTimeout = null;
+            $('#edit_owner_search').on('input', function() {
+                const searchText = $(this).val().trim();
+                
+                if (editSearchTimeout) {
+                    clearTimeout(editSearchTimeout);
+                }
+                
+                if (searchText.length < 2) {
+                    $('#edit_owner_search_results').empty();
+                    return;
+                }
+                
+                editSearchTimeout = setTimeout(function() {
+                    $.get('search_owners.php', {q: searchText}, function(owners) {
+                        let html = '';
+                        owners.forEach(function(owner) {
+                            html += `
+                                <div class="list-group-item owner-result" 
+                                     data-id="${owner.id}"
+                                     data-name="${owner.name}"
+                                     data-phone="${owner.phone}"
+                                     data-address="${owner.address}">
+                                    <div class="fw-bold">${owner.name}</div>
+                                    <small>${owner.phone}</small>
+                                </div>
+                            `;
+                        });
+                        $('#edit_owner_search_results').html(html);
+                    });
+                }, 300);
+            });
+
+            // Xử lý chọn chủ sở hữu mới
+            $(document).on('click', '#edit_owner_search_results .owner-result', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const phone = $(this).data('phone');
+                const address = $(this).data('address');
+                
+                $('#edit_owner_id').val(id);
+                $('#edit_owner_search').val('');
+                $('#edit_owner_search_results').empty();
+                
+                $('#edit_selected_owner_info').html(`
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Chủ sở hữu mới:</h6>
+                            <p class="card-text">
+                                <strong>${name}</strong><br>
+                                SĐT: ${phone}<br>
+                                Địa chỉ: ${address}
+                            </p>
+                        </div>
+                    </div>
+                `);
+            });
+
+            // Submit form edit
+            $('#editVehicleForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'process_vehicle.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.success) {
+                            $('#editVehicleMessage').html('<div class="alert alert-success">' + res.message + '</div>');
+                            setTimeout(() => { location.reload(); }, 1200);
+                        } else {
+                            $('#editVehicleMessage').html('<div class="alert alert-danger">' + res.message + '</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#editVehicleMessage').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>');
+                    }
+                });
             });
         });
     </script>

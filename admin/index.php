@@ -50,16 +50,7 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
             
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Bảng điều khiển</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Xuất báo cáo</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Chia sẻ</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <i class="bi bi-calendar"></i> Tuần này
-                        </button>
-                    </div>
+                    <h1 class="h2">BÁO CÁO VÀ THỐNG</h1>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center mb-3">

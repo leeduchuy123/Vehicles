@@ -616,4 +616,16 @@ function get_violations_count_by_month($conn, $year = null) {
 //     $row = $result->fetch_assoc();
 //     return $row['count'];
 // }
+
+function log_activity($user_id, $action, $table, $record_id, $details = null) {
+    global $conn;
+    
+    $sql = "INSERT INTO operation_history (user_id, action, target_table, target_id, details, action_date) 
+            VALUES (?, ?, ?, ?, ?, NOW())";
+    
+    $stmt = $conn->prepare($sql);
+    $details_json = $details ? json_encode($details) : null;
+    $stmt->bind_param("issss", $user_id, $action, $table, $record_id, $details_json);
+    return $stmt->execute();
+}
 ?>
