@@ -172,6 +172,9 @@ $owners = get_all_owners($conn);
             </main>
         </div>
     </div>
+
+    <!-- Thêm div này sau div.row và trước các modal -->
+    <div id="vehicleMessage" class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050; margin-top: 1rem;"></div>
     
     <!-- Add Vehicle Modal -->
     <div class="modal fade" id="addVehicleModal" tabindex="-1">
@@ -742,6 +745,40 @@ $owners = get_all_owners($conn);
                     },
                     error: function() {
                         $('#editVehicleMessage').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>');
+                    }
+                });
+            });
+
+            $('#deleteVehicleForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'process_vehicle.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.success) {
+                            $('#deleteVehicleModal').modal('hide');
+                            $('#vehicleMessage').html(
+                                '<div class="alert alert-success">' + res.message + '</div>'
+                            );
+                            setTimeout(() => { 
+                                location.reload();
+                            }, 1200);
+                        } else {
+                            $('#deleteVehicleModal').modal('hide');
+                            $('#vehicleMessage').html(
+                                '<div class="alert alert-danger">' + res.message + '</div>'
+                            );
+                        }
+                    },
+                    error: function() {
+                        $('#deleteVehicleModal').modal('hide');
+                        $('#vehicleMessage').html(
+                            '<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>'
+                        );
                     }
                 });
             });

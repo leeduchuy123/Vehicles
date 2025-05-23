@@ -144,6 +144,9 @@ $total_pages = ceil($total_owners / $limit);
         </div>
     </div>
 
+    <!-- Thêm div này sau div.row và trước các modal -->
+    <div id="ownerMessage" class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050; margin-top: 1rem;"></div>
+
     <!-- Add Owner Modal -->
     <div class="modal fade" id="addOwnerModal" tabindex="-1" aria-labelledby="addOwnerModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -386,21 +389,36 @@ $total_pages = ceil($total_owners / $limit);
         $('#deleteOwnerForm').on('submit', function(e) {
             e.preventDefault();
             const owner_id = $('#delete_owner_id').val();
+            
             $.ajax({
                 url: 'process_owner.php',
                 type: 'POST',
-                data: { action: 'delete', owner_id },
+                data: { 
+                    action: 'delete', 
+                    owner_id: owner_id 
+                },
                 dataType: 'json',
                 success: function(res) {
                     if (res.success) {
                         $('#deleteOwnerModal').modal('hide');
-                        setTimeout(() => { location.reload(); }, 800);
+                        $('#ownerMessage').html(
+                            '<div class="alert alert-success">' + res.message + '</div>'
+                        );
+                        setTimeout(() => { 
+                            location.reload();
+                        }, 1200);
                     } else {
-                        alert(res.message);
+                        $('#deleteOwnerModal').modal('hide');
+                        $('#ownerMessage').html(
+                            '<div class="alert alert-danger">' + res.message + '</div>'
+                        );
                     }
                 },
                 error: function() {
-                    alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    $('#deleteOwnerModal').modal('hide');
+                    $('#ownerMessage').html(
+                        '<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại.</div>'
+                    );
                 }
             });
         });

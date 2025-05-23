@@ -12,8 +12,9 @@ Admin :
     10.Fix Bug Owner : OK
     11. Them Thong bao Thanh cong khi tạo : OK
     12. Fix Giao Diện Vehicles cho giống owner : OK
+    13. STT sẽ cập nhật lại mỗi khi Xóa 1 vehicles và owner
 User :
     1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : 
     2. Trang Chủ : + Top Hành Vi vi phạm nhiều nhất trong ngày , trong tháng : Ok
-                   + add Loai xe Vi pham nhieu nhat (month , day , years) :
+                   + add Loai xe Vi pham nhieu nhat (month , day , years) : 
                    + add Thông tin , Báo cáo .
