@@ -12,12 +12,14 @@ Admin :
     10.Fix Bug Owner : OK
     11. Them Thong bao Thanh cong khi tạo : OK
     12. Fix Giao Diện Vehicles cho giống owner : OK
-    13. STT sẽ cập nhật lại mỗi khi Xóa 1 vehicles và owner
-    14. Quan li Vi pham : 
-    15. Sửa lại giao diên cho Tin tuc
+    13. STT sẽ cập nhật lại mỗi khi Xóa 1 vehicles và owner : 
+    14. Quan li Vi pham : OK 
+    15. Sửa lại giao diên cho Tin tuc : 
+    16. Add Tìm kiếm ,... Quản lí Vi phạm :  
 User :
-    1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : 
+    1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : OK
     2. Trang Chủ : + Top Hành Vi vi phạm nhiều nhất trong ngày , trong tháng : Ok
                    + add Loai xe Vi pham nhieu nhat (month , day , years) : 
                    + add Thông tin , Báo cáo . OK
                    + sửa lại dao diện : 
+                   + sửa Footer+ banner : 

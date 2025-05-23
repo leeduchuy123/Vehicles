@@ -10,16 +10,13 @@
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-white">Trang chủ</a></li>
                     <li><a href="#" class="text-white">Hướng dẫn sử dụng</a></li>
-                    <li><a href="#" class="text-white">Chính sách bảo mật</a></li>
-                    <li><a href="#" class="text-white">Điều khoản sử dụng</a></li>
+        
                 </ul>
             </div>
             <div class="col-md-4 mb-3">
                 <h5>Liên hệ</h5>
                 <ul class="list-unstyled">
-                    <li><i class="bi bi-geo-alt"></i> 123 Đường ABC, Quận XYZ, TP. HCM</li>
-                    <li><i class="bi bi-telephone"></i> (028) 1234 5678</li>
-                    <li><i class="bi bi-envelope"></i> info@example.com</li>
+ 
                 </ul>
             </div>
         </div>

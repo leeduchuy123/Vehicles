@@ -13,6 +13,9 @@ require_once 'includes/functions.php';
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <img src="assets/images/banner-left.png" alt="Banner Left" class="banner-left">
+    <img src="assets/images/banner-right.png" alt="Banner Right" class="banner-right">
+
     <?php include 'includes/header.php'; ?>
 
     <div class="container mt-5">

@@ -1,4 +1,4 @@
-<header class="bg-dark text-white">
+<header class="bg-danger text-white">
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
             <div class="d-flex align-items-center">
@@ -8,7 +8,8 @@
             <ul class="nav">
                 <li class="nav-item"><a href="home.php" class="nav-link px-2 text-white">Trang chủ</a></li>
                 <li class="nav-item"><a href="index.php" class="nav-link px-2 text-white">Tra Cứu Vi Phạm</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-white">Liên hệ</a></li>
+                <li class="nav-item"><a href="news_detail.php" class="nav-link px-2 text-white">Tin Tức </a></li>
+                 <li class="nav-item"><a href="#" class="nav-link px-2 text-white">Giới Thiệu</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a href="admin/index.php" class="nav-link px-2 text-white">Quản trị</a></li>
                     <li class="nav-item"><a href="admin/logout.php" class="nav-link px-2 text-white">Đăng xuất</a></li>

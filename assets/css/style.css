@@ -43,18 +43,18 @@ body {
 
 /* Custom button styling */
 .btn-primary {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: red;
+  border-color: red;
 }
 
 .btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: red;
+  border-color: red ;
 }
 
 /* Footer styling */
 footer {
-  margin-top: auto;
+  margin-top: auto ;
 }
 
 /* Responsive adjustments */
@@ -91,4 +91,23 @@ footer {
 .news-sidebar .list-group::-webkit-scrollbar-thumb {
     background-color: #6c757d;
     border-radius: 3px;
+}
+
+.banner-left, .banner-right {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    height: 600px;
+    width: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.banner-left {
+    left: 0;
+}
+
+.banner-right {
+    right: 0;
 }
