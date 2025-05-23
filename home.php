@@ -80,15 +80,62 @@ if ($mode === 'month') {
                     </div>
                 </div>
                 <div class="card mt-4 shadow">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0">Giới thiệu</h4>
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Tin tức mới nhất</h4>
                     </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Trang này hiển thị thống kê các hành vi vi phạm phổ biến nhất.</li>
-                            <li class="list-group-item">Bạn có thể chuyển đổi giữa thống kê theo ngày, tháng hoặc tất cả dữ liệu.</li>
-                            <li class="list-group-item">Dữ liệu được cập nhật liên tục từ hệ thống quản lý vi phạm.</li>
-                        </ul>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <?php
+                            // Lấy 4 tin tức mới nhất từ CSDL
+                            $sql = "SELECT * FROM news ORDER BY created_at DESC LIMIT 4";
+                            $result = $conn->query($sql);
+                            
+                            if ($result->num_rows > 0) {
+                                while($news = $result->fetch_assoc()) {
+                                    ?>
+                                    <div class="list-group-item">
+                                        <div class="row g-0">
+                                            <div class="col-md-3">
+                                                <img src="<?php echo htmlspecialchars($news['image']); ?>" 
+                                                     class="img-fluid rounded" 
+                                                     alt="<?php echo htmlspecialchars($news['title']); ?>"
+                                                     style="max-height: 120px; object-fit: cover;">
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <a href="news_detail.php?id=<?php echo $news['id']; ?>" 
+                                                           class="text-decoration-none text-dark">
+                                                            <?php echo htmlspecialchars($news['title']); ?>
+                                                        </a>
+                                                    </h5>
+                                                    <p class="card-text text-muted small">
+                                                        <i class="bi bi-calendar"></i> 
+                                                        <?php echo date('d/m/Y', strtotime($news['created_at'])); ?>
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <?php 
+                                                        echo strlen($news['description']) > 150 ? 
+                                                             substr($news['description'], 0, 150) . '...' : 
+                                                             $news['description']; 
+                                                        ?>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                echo '<div class="list-group-item">Chưa có tin tức nào.</div>';
+                            }
+                            ?>
+                        </div>
+                        <div class="card-footer text-end bg-light">
+                            <a href="news_detail.php" class="btn btn-primary btn-sm">
+                                Xem tất cả tin tức <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -186,38 +186,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Yêu cầu xác nhận thanh toán</h5>
+                    <h5 class="modal-title">Xác nhận thanh toán vi phạm</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="paymentForm" enctype="multipart/form-data">
-                        <input type="hidden" name="violation_id" id="violationId">
-                        
+                    <form id="paymentRequestForm">
+                        <input type="hidden" name="violation_id" id="violation_id">
+
+                        <!-- Thông tin vi phạm -->
+                        <div class="alert alert-info mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Biển số xe:</strong> 
+                                    <span id="vehicle_plate"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Số tiền phạt:</strong> 
+                                    <span id="fine_amount" class="text-danger fw-bold"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label">Số tiền cần thanh toán</label>
-                                <div class="form-control-plaintext fw-bold text-danger" id="paymentAmount">0 VNĐ</div>
+                                <label class="form-label">Người nộp tiền *</label>
+                                <input type="text" class="form-control" name="payer_name" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Phương thức thanh toán</label>
+                                <label class="form-label">Phương thức thanh toán *</label>
                                 <select class="form-select" name="payment_method" required>
                                     <option value="">-- Chọn phương thức --</option>
+                                    <option value="cash">Tiền mặt</option>
                                     <option value="bank">Chuyển khoản ngân hàng</option>
                                     <option value="momo">Ví MoMo</option>
-                                    <option value="cash">Tiền mặt</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Người nộp tiền</label>
-                            <input type="text" class="form-control" name="payer_name" required>
-                        </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label">Số điện thoại</label>
-                                <input type="tel" class="form-control" name="payer_phone" required>
+                                <label class="form-label">Số điện thoại *</label>
+                                <input type="tel" class="form-control" name="payer_phone" 
+                                       pattern="(84|0[3|5|7|8|9])+([0-9]{8})"
+                                       title="Số điện thoại Việt Nam (10 số)" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
@@ -226,25 +237,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Ngày nộp tiền</label>
-                            <input type="date" class="form-control" name="payment_date" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Ảnh biên lai/hóa đơn</label>
-                            <input type="file" class="form-control" name="payment_proof" accept="image/*" required>
-                            <div class="form-text">Vui lòng tải lên ảnh biên lai hoặc hóa đơn thanh toán</div>
+                            <label class="form-label">Ngày thanh toán *</label>
+                            <input type="date" class="form-control" name="payment_date" 
+                                   value="<?php echo date('Y-m-d'); ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Ghi chú</label>
-                            <textarea class="form-control" name="notes" rows="3"></textarea>
+                            <textarea class="form-control" name="notes" rows="3" 
+                                    placeholder="Nhập ghi chú nếu có..."></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" id="submitPayment">Gửi yêu cầu</button>
+                    <button type="submit" form="paymentRequestForm" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Gửi yêu cầu
+                    </button>
                 </div>
             </div>
         </div>
@@ -287,6 +296,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
                     },
                     error: function() {
                         alert('Có lỗi xảy ra khi gửi yêu cầu.');
+                    }
+                });
+            });
+
+            // Xử lý form submission
+            $('#paymentRequestForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                $.ajax({
+                    url: 'process_payment_request.php',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Yêu cầu xác nhận thanh toán đã được gửi thành công!');
+                            $('#paymentModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert('Lỗi: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+                    }
+                });
+            });
+
+            // Mở modal và điền thông tin
+            $('.pay-button').click(function() {
+                const violationId = $(this).data('id');
+                const amount = $(this).data('amount');
+                const licensePlate = $(this).closest('tr').find('td:first').text();
+                
+                $('#violation_id').val(violationId);
+                $('#vehicle_plate').text(licensePlate);
+                $('#fine_amount').text(amount.toLocaleString('vi-VN') + ' VNĐ');
+                $('#paymentModal').modal('show');
+            });
+
+            // Xử lý gửi form
+            $('#paymentRequestForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                $.ajax({
+                    url: 'process_payment_request.php',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Yêu cầu xác nhận thanh toán đã được gửi thành công!');
+                            $('#paymentModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert('Lỗi: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
                     }
                 });
             });

@@ -49,6 +49,61 @@ require_once 'includes/functions.php';
                         </ul>
                     </div>
                 </div>
+
+                <div class="card mt-4 shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Tin tức mới nhất</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <?php
+                            // Lấy danh sách tin tức từ CSDL
+                            $sql = "SELECT * FROM news ORDER BY created_at DESC LIMIT 5";
+                            $result = $conn->query($sql);
+                            
+                            if ($result->num_rows > 0) {
+                                while($news = $result->fetch_assoc()) {
+                                    ?>
+                                    <div class="list-group-item">
+                                        <div class="row g-0">
+                                            <div class="col-md-3">
+                                                <img src="<?php echo htmlspecialchars($news['image']); ?>" 
+                                                    class="img-fluid rounded" 
+                                                    alt="<?php echo htmlspecialchars($news['title']); ?>"
+                                                    style="max-height: 120px; object-fit: cover;">
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <a href="news_detail.php?id=<?php echo $news['id']; ?>" 
+                                                        class="text-decoration-none text-dark">
+                                                        <?php echo htmlspecialchars($news['title']); ?>
+                                                        </a>
+                                                    </h5>
+                                                    <p class="card-text text-muted small">
+                                                        <i class="bi bi-calendar"></i> 
+                                                        <?php echo date('d/m/Y', strtotime($news['created_at'])); ?>
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <?php 
+                                                        echo strlen($news['description']) > 150 ? 
+                                                            substr($news['description'], 0, 150) . '...' : 
+                                                            $news['description']; 
+                                                        ?>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                echo '<div class="list-group-item">Chưa có tin tức nào.</div>';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

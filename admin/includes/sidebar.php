@@ -16,6 +16,15 @@
                     <i class="bi bi-people"></i> Quản lý chủ sở hữu
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'violations.php' ? 'active' : ''; ?>" href="violations.php">
+                    <i class="bi bi-exclamation-triangle"></i> Quản lý vi phạm
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'news.php' ? 'active' : ''; ?>" href="news.php">
+                    <i class="bi bi-newspaper"></i> Quản lý tin tức
+                </a>
 
         </ul>
 

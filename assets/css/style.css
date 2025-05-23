@@ -64,3 +64,31 @@ footer {
     padding: 8px 15px;
   }
 }
+
+.news-sidebar .list-group-item.active {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: #000;
+}
+
+.news-sidebar .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.news-sidebar .list-group {
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d #f8f9fa;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar {
+    width: 6px;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 3px;
+}

@@ -3,18 +3,21 @@ Admin :
     2. add them Loai Vi pham Nhieu nhat : OK
     3. 10 bản ghi 1 trang : OK
     4. Validate BienSoxe (29A-123.45) : OK
-    5. Quản lí thông tin báo cáo : 
+    5. Quản lí thông tin báo cáo : OK
     6. Chart Vi pham theo thoi gian : OK
     7. Theo Năm : Tổng số PT theo năm , vi pham , sở hữu , Vi phạm chưa nộp : 
     8. Fix giao diện Owner : OK
-    9. validate : SDT : Không dc trùng số dt
+    9. validate : SDT : Không dc trùng số dt :OK
     9. Chia lại Function admin : 
     10.Fix Bug Owner : OK
     11. Them Thong bao Thanh cong khi tạo : OK
     12. Fix Giao Diện Vehicles cho giống owner : OK
     13. STT sẽ cập nhật lại mỗi khi Xóa 1 vehicles và owner
+    14. Quan li Vi pham : 
+    15. Sửa lại giao diên cho Tin tuc
 User :
     1. Bỏ thanh toán online -> Hướng dẫn thanh toán Offline : 
     2. Trang Chủ : + Top Hành Vi vi phạm nhiều nhất trong ngày , trong tháng : Ok
                    + add Loai xe Vi pham nhieu nhat (month , day , years) : 
-                   + add Thông tin , Báo cáo .
+                   + add Thông tin , Báo cáo . OK
+                   + sửa lại dao diện : 
