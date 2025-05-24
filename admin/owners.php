@@ -90,7 +90,7 @@ $total_pages = ceil($total_owners / $limit);
                     <table class="table table-striped table-hover align-middle">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>STT</th>
                                 <th>Tên chủ sở hữu</th>
                                 <th>Số điện thoại</th>
                                 <th>Địa chỉ</th>
@@ -98,9 +98,10 @@ $total_pages = ceil($total_owners / $limit);
                             </tr>
                         </thead>
                         <tbody id="ownersTableBody">
-                            <?php foreach ($owners as $owner): ?>
+                            <?php $stt = $offset + 1;
+                            foreach ($owners as $owner): ?>
                                 <tr data-id="<?php echo $owner['owner_id']; ?>">
-                                    <td><?php echo $owner['owner_id']; ?></td>
+                                    <td><?php echo $stt++; ?></td>
                                     <td><?php echo htmlspecialchars($owner['name']); ?></td>
                                     <td><?php echo htmlspecialchars($owner['phone']); ?></td>
                                     <td><?php echo htmlspecialchars($owner['address']); ?></td>

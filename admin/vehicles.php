@@ -46,10 +46,10 @@ $owners = get_all_owners($conn);
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Quản lý phương tiện</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
+                        <!-- <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary" id="exportCSV">Xuất CSV</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary" id="exportPDF">Xuất PDF</button>
-                        </div>
+                        </div> -->
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
                             <i class="bi bi-plus-circle"></i> Thêm phương tiện
                         </button>
@@ -89,7 +89,7 @@ $owners = get_all_owners($conn);
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>STT</th>
                                 <th>Biển số</th>
                                 <th>Loại xe</th>
                                 <th>Hãng xe</th>
@@ -101,7 +101,8 @@ $owners = get_all_owners($conn);
                             </tr>
                         </thead>
                         <tbody id="vehiclesTableBody">
-                            <?php foreach ($vehicles as $vehicle): ?>
+                            <?php $stt = $offset + 1;
+                            foreach ($vehicles as $vehicle): ?>
                                 <?php 
                                     $owner = get_owner_by_id($conn, $vehicle['owner_id']);
                                     $violations_count = get_violations_count_by_vehicle($conn, $vehicle['vehicle_id']);
@@ -122,7 +123,7 @@ $owners = get_all_owners($conn);
                                     }
                                 ?>
                                 <tr>
-                                    <td><?php echo $vehicle['vehicle_id']; ?></td>
+                                    <td><?php echo $stt++; ?></td>
                                     <td><?php echo htmlspecialchars($vehicle['license_plate']); ?></td>
                                     <td><?php echo $vehicle['type'] == 'Car' ? 'Ô tô' : 'Xe máy'; ?></td>
                                     <td><?php echo htmlspecialchars($vehicle['brand']); ?></td>

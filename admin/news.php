@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Pagination
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
 
@@ -28,6 +28,7 @@ $total_pages = ceil($total_records / $limit);
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <title>Quản lý tin tức - Admin</title>
@@ -35,14 +36,16 @@ $total_pages = ceil($total_records / $limit);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body>
-    
+
     <div class="container-fluid">
         <div class="row">
             <?php include 'includes/sidebar.php'; ?>
-            
+
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Quản lý tin tức</h1>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewsModal">
                         <i class="bi bi-plus-lg"></i> Thêm tin tức mới
@@ -54,7 +57,7 @@ $total_pages = ceil($total_records / $limit);
                     <table class="table table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>STT</th>
                                 <th>Ảnh</th>
                                 <th>Tiêu đề</th>
                                 <th>Ngày tạo</th>
@@ -62,33 +65,33 @@ $total_pages = ceil($total_records / $limit);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($news_list as $news): ?>
-                            <tr>
-                                <td><?php echo $news['id']; ?></td>
-                                <td>
-                                    <img src="../<?php echo htmlspecialchars($news['image']); ?>" 
-                                         alt="News thumbnail" 
-                                         style="height: 50px; width: 80px; object-fit: cover;">
-                                </td>
-                                <td><?php echo htmlspecialchars($news['title']); ?></td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($news['created_at'])); ?></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-info view-news" 
+                            <?php $stt = $offset + 1;
+                            foreach ($news_list as $news): ?>
+                                <tr>
+                                    <td><?php echo $stt++; ?></td>
+                                    <td>
+                                        <img src="../<?php echo htmlspecialchars($news['image']); ?>" alt="News thumbnail"
+                                            style="height: 50px; width: 80px; object-fit: cover;">
+                                    </td>
+                                    <td><?php echo htmlspecialchars($news['title']); ?></td>
+                                    <td><?php echo date('d/m/Y H:i', strtotime($news['created_at'])); ?></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-info view-news"
                                                 data-id="<?php echo $news['id']; ?>">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-primary edit-news"
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary edit-news"
                                                 data-id="<?php echo $news['id']; ?>">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger delete-news"
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger delete-news"
                                                 data-id="<?php echo $news['id']; ?>">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -96,15 +99,15 @@ $total_pages = ceil($total_records / $limit);
 
                 <!-- Pagination -->
                 <?php if ($total_pages > 1): ?>
-                <nav aria-label="Page navigation" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
-                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
-                </nav>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+                        </ul>
+                    </nav>
                 <?php endif; ?>
             </main>
         </div>
@@ -190,7 +193,7 @@ $total_pages = ceil($total_records / $limit);
                     <form id="editNewsForm" enctype="multipart/form-data">
                         <input type="hidden" name="news_id" id="edit_news_id">
                         <input type="hidden" name="current_image" id="current_image">
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Tiêu đề *</label>
                             <input type="text" class="form-control" name="title" id="edit_title" required>
@@ -198,12 +201,14 @@ $total_pages = ceil($total_records / $limit);
 
                         <div class="mb-3">
                             <label class="form-label">Mô tả ngắn *</label>
-                            <textarea class="form-control" name="description" id="edit_description" rows="3" required></textarea>
+                            <textarea class="form-control" name="description" id="edit_description" rows="3"
+                                required></textarea>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Nội dung chi tiết *</label>
-                            <textarea class="form-control" name="content" id="edit_content" rows="5" required></textarea>
+                            <textarea class="form-control" name="content" id="edit_content" rows="5"
+                                required></textarea>
                         </div>
 
                         <div class="mb-3">
@@ -227,19 +232,19 @@ $total_pages = ceil($total_records / $limit);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Add news
-                $('#addNewsForm').on('submit', function(e) {
+            $('#addNewsForm').on('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(this);
-                
+
                 $.ajax({
                     url: 'process_news.php',
                     type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             alert('Thêm tin tức thành công!');
                             $('#addNewsModal').modal('hide');
@@ -248,18 +253,18 @@ $total_pages = ceil($total_records / $limit);
                             alert('Lỗi: ' + response.message);
                         }
                     },
-                    error: function() {
+                    error: function () {
                         alert('Có lỗi xảy ra, vui lòng thử lại.');
                     }
                 });
             });
 
 
-                    // Edit news - load data
-            $('.edit-news').click(function() {
+            // Edit news - load data
+            $('.edit-news').click(function () {
                 const id = $(this).data('id');
-                
-                $.get('get_news.php', {id: id}, function(news) {
+
+                $.get('get_news.php', { id: id }, function (news) {
                     $('#edit_news_id').val(news.id);
                     $('#edit_title').val(news.title);
                     $('#edit_description').val(news.description);
@@ -271,18 +276,18 @@ $total_pages = ceil($total_records / $limit);
             });
 
             // Submit edit form
-            $('#editNewsForm').on('submit', function(e) {
+            $('#editNewsForm').on('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(this);
                 formData.append('action', 'edit');
-                
+
                 $.ajax({
                     url: 'process_news.php',
                     type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             alert('Cập nhật tin tức thành công!');
                             $('#editNewsModal').modal('hide');
@@ -295,13 +300,13 @@ $total_pages = ceil($total_records / $limit);
             });
 
             // Delete news
-            $('.delete-news').click(function() {
+            $('.delete-news').click(function () {
                 if (confirm('Bạn có chắc chắn muốn xóa tin tức này?')) {
                     const id = $(this).data('id');
                     $.post('process_news.php', {
                         action: 'delete',
                         news_id: id
-                    }, function(response) {
+                    }, function (response) {
                         if (response.success) {
                             location.reload();
                         } else {
@@ -312,20 +317,21 @@ $total_pages = ceil($total_records / $limit);
             });
 
             // View news
-            $('.view-news').click(function() {
+            $('.view-news').click(function () {
                 const id = $(this).data('id');
-                
-                $.get('get_news.php', {id: id}, function(news) {
+
+                $.get('get_news.php', { id: id }, function (news) {
                     $('#viewNewsImage').attr('src', '../' + news.image);
                     $('#viewNewsTitle').text(news.title);
                     $('#viewNewsDate').text(new Date(news.created_at).toLocaleString('vi-VN'));
                     $('#viewNewsDescription').text(news.description);
                     $('#viewNewsContent').html(news.content);
-                    
+
                     $('#viewNewsModal').modal('show');
                 });
             });
         });
     </script>
 </body>
+
 </html>
