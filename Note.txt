@@ -1,5 +1,5 @@
 Admin :
-    1. fix search add , creat Quan Li thuong tien , Thay vì chon Owner -> Tìm kiếm theo tên : Ok
+    1. fix search add , create Quan Li thuong tien , Thay vì chon Owner -> Tìm kiếm theo tên : Ok
     2. add them Loai Vi pham Nhieu nhat : OK
     3. 10 bản ghi 1 trang : OK
     4. Validate BienSoxe (29A-123.45) : OK
@@ -23,3 +23,10 @@ User :
                    + add Thông tin , Báo cáo . OK
                    + sửa lại dao diện : 
                    + sửa Footer+ banner : 
+
+----------------------------------------------------
+Cái khung đã đúng, đừng có sửa code. 
+Giờ chỉ cần add thêm thông tin thôi
+1. Adding (Lưu ý: bảng payment ở database.sql khác nhé. ) -> Nhưng nó có khóa ngoại, vì vậy cần phải đọc code xử lý backend của nó trước.
+
+1. Đã là admin, nhưng không rõ đấy là của ai, bởi vì user_id là 1, trong khi in ra thì $_SESSION[user_id] = 3

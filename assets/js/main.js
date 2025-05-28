@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const licensePlate = document.getElementById("license_plate").value.trim()
 
       // Simple validation for license plate format
-      const licensePlateRegex = /^[0-9]{2}[A-Z]-[0-9]{3}\.[0-9]{2}$/
+      const licensePlateRegex = /^[0-9]{2}[A-Z]-[0-9]{5}$/
 
       if (!licensePlateRegex.test(licensePlate)) {
         e.preventDefault()

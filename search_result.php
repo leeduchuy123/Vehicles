@@ -5,7 +5,7 @@ require_once 'includes/functions.php';
 
 // Check if form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
-    $license_plate = sanitize_input($_POST['license_plate']);
+    $license_plate = sanitize_input($_POST['license_plate']); //bien so xe
     
     // Get vehicle information
     $vehicle = get_vehicle_by_license_plate($conn, $license_plate);
@@ -243,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
 
                         <div class="mb-3">
                             <label class="form-label">Ghi chú</label>
-                            <textarea class="form-control" name="notes" rows="3"></textarea>
+                            <textarea class="form-control" name="note" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
@@ -319,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
                         }
                     },
                     error: function() {
-                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau./Xử lý form submission');
                     }
                 });
             });
@@ -360,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
                         }
                     },
                     error: function() {
-                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau. //Xử lý gửi form');
                     }
                 });
             });
@@ -385,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['license_plate'])) {
                         }
                     },
                     error: function() {
-                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau.//Loi ngay 26/05');
                     }
                 });
             });

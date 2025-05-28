@@ -3,6 +3,9 @@
  * Sanitize user input
  */
 function sanitize_input($data) {
+    if ($data === null) {
+        return null;
+    }
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -21,7 +24,7 @@ function get_vehicle_by_license_plate($conn, $license_plate) {
     
     if ($result->num_rows > 0) {
         return $result->fetch_assoc();
-    }
+    } 
     
     return null;
 }

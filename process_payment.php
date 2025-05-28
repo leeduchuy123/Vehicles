@@ -19,7 +19,7 @@ try {
     $payer_phone = sanitize_input($_POST['payer_phone'] ?? null);
     $payer_email = sanitize_input($_POST['payer_email'] ?? null);
     $payment_date = !empty($_POST['payment_date']) ? $_POST['payment_date'] : null;
-    $notes = sanitize_input($_POST['notes'] ?? null);
+    $note = sanitize_input($_POST['note'] ?? null);
 
     // Get violation amount
     $stmt = $conn->prepare("SELECT fine FROM violations WHERE violation_id = ?");
@@ -35,7 +35,7 @@ try {
     // Insert payment record
     $sql = "INSERT INTO payments (
         violation_id, amount, payment_method, status, 
-        payer_name, payer_phone, payer_email, payment_date, notes
+        payer_name, payer_phone, payer_email, payment_date, note
     ) VALUES (?, ?, ?, 'Pending', ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
@@ -48,7 +48,7 @@ try {
         $payer_phone,
         $payer_email,
         $payment_date,
-        $notes
+        $note
     );
 
     if ($stmt->execute()) {
