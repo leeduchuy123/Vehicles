@@ -393,9 +393,9 @@ function log_action($conn, $user_id, $action, $target_table, $target_id) {
 }
 
 /**
- * Lấy top 4 hành vi vi phạm nhiều nhất theo ngày (trong ngày hiện tại)
+ * Lấy top 3 hành vi vi phạm nhiều nhất theo ngày (trong ngày hiện tại)
  */
-function get_top_violation_categories_by_day($conn, $date = null, $limit = 4, $year = null) {
+function get_top_violation_categories_by_day($conn, $date = null, $limit = 3, $year = null) {
     if ($date === null) {
         $date = date('Y-m-d');
     }
@@ -431,7 +431,7 @@ function get_top_violation_categories_by_day($conn, $date = null, $limit = 4, $y
 /**
  * Lấy top 4 hành vi vi phạm nhiều nhất theo tháng (trong tháng hiện tại)
  */
-function get_top_violation_categories_by_month($conn, $month = null, $year = null, $limit = 4) {
+function get_top_violation_categories_by_month($conn, $month = null, $year = null, $limit = 3) {
     if ($month === null) $month = date('m');
     if ($year === null) $year = date('Y');
     $sql = "SELECT description, COUNT(*) as count
@@ -454,7 +454,7 @@ function get_top_violation_categories_by_month($conn, $month = null, $year = nul
 /**
  * Lấy top N hành vi vi phạm nhiều nhất (tất cả)
  */
-function get_top_violation_categories($conn, $limit = 4, $year = null) {
+function get_top_violation_categories($conn, $limit = 3, $year = null) {
     $sql = "SELECT description, COUNT(*) as count
             FROM violations";
     $params = [];

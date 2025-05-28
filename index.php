@@ -40,20 +40,6 @@ require_once 'includes/functions.php';
                 </div>
 
                 <div class="card mt-4 shadow">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0">Hướng dẫn tra cứu</h4>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Nhập đầy đủ biển số xe bao gồm cả ký tự đặc biệt (VD: 30A-12345)</li>
-                            <li class="list-group-item">Hệ thống sẽ hiển thị thông tin về phương tiện và các vi phạm (nếu có)</li>
-                            <li class="list-group-item">Bạn có thể thanh toán trực tuyến các khoản phạt qua mã QR</li>
-                            <li class="list-group-item">Để biết thêm thông tin, vui lòng liên hệ hotline: <strong>1900 xxxx</strong></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="card mt-4 shadow">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Tin tức mới nhất</h4>
                     </div>

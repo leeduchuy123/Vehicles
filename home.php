@@ -5,17 +5,17 @@ require_once 'config/database.php';
 require_once 'includes/functions.php';
 
 // Xác định chế độ xem: day, month, all
-$mode = isset($_GET['mode']) ? $_GET['mode'] : 'day';
+$mode = isset($_GET['mode']) ? $_GET['mode'] : 'all';
 
 if ($mode === 'month') {
     $categories = get_top_violation_categories_by_month($conn);
-    $title = "Top 4 hành vi vi phạm nhiều nhất trong tháng này";
+    $title = "Top 3 hành vi vi phạm nhiều nhất trong tháng này";
 } elseif ($mode === 'all') {
-    $categories = get_top_violation_categories($conn, 4);
-    $title = "Top 4 hành vi vi phạm nhiều nhất (tất cả)";
+    $categories = get_top_violation_categories($conn, 3);
+    $title = "Top 3 hành vi vi phạm nhiều nhất";
 } else {
     $categories = get_top_violation_categories_by_day($conn);
-    $title = "Top 4 hành vi vi phạm nhiều nhất hôm nay";
+    $title = "Top 3 hành vi vi phạm nhiều nhất hôm nay";
 }
 ?>
 <!DOCTYPE html>
@@ -42,9 +42,9 @@ if ($mode === 'month') {
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-center mb-4">
+                            <a href="?mode=all" class="btn btn-outline-primary mx-1 <?php if($mode==='all') echo 'active'; ?>">Tất cả</a>
                             <a href="?mode=day" class="btn btn-outline-primary mx-1 <?php if($mode==='day') echo 'active'; ?>">Hôm nay</a>
                             <a href="?mode=month" class="btn btn-outline-primary mx-1 <?php if($mode==='month') echo 'active'; ?>">Tháng này</a>
-                            <a href="?mode=all" class="btn btn-outline-primary mx-1 <?php if($mode==='all') echo 'active'; ?>">Tất cả</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover text-center align-middle mb-0">
