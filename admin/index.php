@@ -43,95 +43,101 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="bg-gray-100">
     <div class="container-fluid">
         <div class="row">
             <?php include 'includes/sidebar.php'; ?>
             
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">BÁO CÁO VÀ THỐNG KÊ</h1>
+                <!-- Header Section -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+                    <div>
+                        <h1 class="h2 mb-0">Báo cáo & Thống kê</h1>
+                        <p class="text-muted mb-0">Năm <?php echo $selected_year; ?></p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <form method="get" class="d-flex align-items-center">
+                            <label for="yearSelect" class="me-2 mb-0 fw-bold">Chọn năm:</label>
+                            <select name="year" id="yearSelect" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                                <?php
+                                $currentYear = date('Y');
+                                for ($y = $currentYear; $y >= $currentYear - 10; $y--) {
+                                    echo '<option value="'.$y.'"'.($selected_year == $y ? ' selected' : '').'>'.$y.'</option>';
+                                }
+                                ?>
+                            </select>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-end align-items-center mb-3">
-                    <form method="get" class="d-flex align-items-center">
-                        <label for="yearSelect" class="me-2 mb-0 fw-bold">Chọn năm:</label>
-                        <select name="year" id="yearSelect" class="form-select form-select-sm me-2" style="width:auto;" onchange="this.form.submit()">
-                            <?php
-                            $currentYear = date('Y');
-                            for ($y = $currentYear; $y >= $currentYear - 10; $y--) {
-                                echo '<option value="'.$y.'"'.($selected_year == $y ? ' selected' : '').'>'.$y.'</option>';
-                            }
-                            ?>
-                        </select>
-                        <noscript><button type="submit" class="btn btn-sm btn-primary">Xem</button></noscript>
-                    </form>
-                </div>
-                
                 <!-- Stats Cards -->
-                <div class="row">
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
                             <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Tổng số phương tiện</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_vehicles; ?></div>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="stats-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3">
+                                            <i class="bi bi-car-front fs-4"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-car-front fs-2 text-gray-300"></i>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-muted mb-1">Tổng số phương tiện</h6>
+                                        <h3 class="mb-0"><?php echo number_format($total_vehicles); ?></h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
                             <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Tổng số vi phạm</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_violations; ?></div>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="stats-icon bg-success bg-opacity-10 text-success rounded-3 p-3">
+                                            <i class="bi bi-exclamation-triangle fs-4"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-exclamation-triangle fs-2 text-gray-300"></i>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-muted mb-1">Tổng số vi phạm</h6>
+                                        <h3 class="mb-0"><?php echo number_format($total_violations); ?></h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
                             <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                            Tổng số chủ sở hữu</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_owners; ?></div>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="stats-icon bg-info bg-opacity-10 text-info rounded-3 p-3">
+                                            <i class="bi bi-people fs-4"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-people fs-2 text-gray-300"></i>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-muted mb-1">Tổng số chủ sở hữu</h6>
+                                        <h3 class="mb-0"><?php echo number_format($total_owners); ?></h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
                             <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Vi phạm chưa nộp phạt</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $unpaid_violations; ?></div>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="stats-icon bg-warning bg-opacity-10 text-warning rounded-3 p-3">
+                                            <i class="bi bi-cash-stack fs-4"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-cash-stack fs-2 text-gray-300"></i>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-muted mb-1">Vi phạm chưa nộp phạt</h6>
+                                        <h3 class="mb-0"><?php echo number_format($unpaid_violations); ?></h3>
                                     </div>
                                 </div>
                             </div>
@@ -140,15 +146,15 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                 </div>
 
                 <!-- Charts Row -->
-                <div class="row">
+                <div class="row g-4 mb-4">
                     <!-- Violations Chart -->
-                    <div class="col-xl-8 col-lg-7">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Vi phạm theo thời gian</h6>
+                    <div class="col-xl-8">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-transparent border-0 py-3">
+                                <h5 class="card-title mb-0">Vi phạm theo thời gian</h5>
                             </div>
                             <div class="card-body">
-                                <div class="chart-area">
+                                <div class="chart-area" style="height: 300px;">
                                     <canvas id="violationsChart"></canvas>
                                 </div>
                             </div>
@@ -156,25 +162,30 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                     </div>
 
                     <!-- Payment Methods Chart -->
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Phương thức thanh toán</h6>
+                    <div class="col-xl-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-transparent border-0 py-3">
+                                <h5 class="card-title mb-0">Phương thức thanh toán</h5>
                             </div>
                             <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
+                                <div class="chart-pie" style="height: 250px;">
                                     <canvas id="paymentMethodsChart"></canvas>
                                 </div>
-                                <div class="mt-4 text-center small">
-                                    <span class="me-2">
-                                        <i class="bi bi-circle-fill text-primary"></i> Online
-                                    </span>
-                                    <span class="me-2">
-                                        <i class="bi bi-circle-fill text-success"></i> Offline
-                                    </span>
-                                    <span class="me-2">
-                                        <i class="bi bi-circle-fill text-info"></i> Chưa thanh toán
-                                    </span>
+                                <div class="mt-4 text-center">
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-primary me-2">&nbsp;</span>
+                                            <small>Online</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success me-2">&nbsp;</span>
+                                            <small>Offline</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-info me-2">&nbsp;</span>
+                                            <small>Chưa thanh toán</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -182,22 +193,22 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                 </div>
 
                 <!-- Content Row -->
-                <div class="row">
+                <div class="row g-4">
                     <!-- Recent Violations -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Vi phạm gần đây</h6>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-transparent border-0 py-3">
+                                <h5 class="card-title mb-0">Vi phạm gần đây</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" width="100%" cellspacing="0">
-                                        <thead>
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
                                             <tr>
-                                                <th>Biển số</th>
-                                                <th>Mô tả</th>
-                                                <th>Ngày vi phạm</th>
-                                                <th>Trạng thái</th>
+                                                <th class="border-0">Biển số</th>
+                                                <th class="border-0">Mô tả</th>
+                                                <th class="border-0">Ngày</th>
+                                                <th class="border-0">Trạng thái</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -222,10 +233,10 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                                                     }
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo htmlspecialchars($violation['license_plate']); ?></td>
-                                                    <td><?php echo htmlspecialchars($violation['description']); ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($violation['violation_date'])); ?></td>
-                                                    <td><span class="badge <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
+                                                    <td class="text-nowrap"><?php echo htmlspecialchars($violation['license_plate']); ?></td>
+                                                    <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($violation['description']); ?></td>
+                                                    <td class="text-nowrap"><?php echo date('d/m/Y', strtotime($violation['violation_date'])); ?></td>
+                                                    <td><span class="badge <?php echo $status_class; ?> rounded-pill"><?php echo $status_text; ?></span></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -236,36 +247,44 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                     </div>
 
                     <!-- Top Violation Behaviors -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow mb-4 h-70">
-                            <div class="card-header py-3 text-center">
-                                <h6 class="m-0 font-weight-bold text-primary">Hành vi vi phạm nhiều nhất</h6>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-transparent border-0 py-3">
+                                <h5 class="card-title mb-0">Hành vi vi phạm nhiều nhất</h5>
                             </div>
-                            <div class="card-body p-2">
-                                <ul class="nav nav-pills nav-justified mb-3" id="topViolationTab" role="tablist">
+                            <div class="card-body">
+                                <ul class="nav nav-pills nav-fill mb-3" id="topViolationTab" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="day-tab" data-bs-toggle="pill" data-bs-target="#day" type="button" role="tab">Ngày</button>
+                                        <button class="nav-link active" id="day-tab" data-bs-toggle="pill" data-bs-target="#day" type="button" role="tab">
+                                            <i class="bi bi-calendar-day me-1"></i>Ngày
+                                        </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="month-tab" data-bs-toggle="pill" data-bs-target="#month" type="button" role="tab">Tháng</button>
+                                        <button class="nav-link" id="month-tab" data-bs-toggle="pill" data-bs-target="#month" type="button" role="tab">
+                                            <i class="bi bi-calendar-month me-1"></i>Tháng
+                                        </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">Tất cả</button>
+                                        <button class="nav-link" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">
+                                            <i class="bi bi-calendar-all me-1"></i>Tất cả
+                                        </button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="topViolationTabContent">
                                     <div class="tab-pane fade show active" id="day" role="tabpanel">
                                         <?php if (empty($top_categories_day)): ?>
-                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                            <div class="text-center text-muted py-4">Không có dữ liệu.</div>
                                         <?php else: ?>
                                             <?php foreach ($top_categories_day as $i => $cat): ?>
-                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
-                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
-                                                </h6>
-                                                <div class="progress mb-2">
-                                                    <div class="progress-bar bg-success" role="progressbar"
-                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
-                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="mb-3">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <h6 class="mb-0"><?php echo htmlspecialchars($cat['description']); ?></h6>
+                                                        <span class="badge bg-success"><?php echo $cat['count']; ?> lần</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar bg-success" role="progressbar"
+                                                            style="width: <?php echo min(100, $cat['count'] * 10); ?>%">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -273,16 +292,18 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                                     </div>
                                     <div class="tab-pane fade" id="month" role="tabpanel">
                                         <?php if (empty($top_categories_month)): ?>
-                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                            <div class="text-center text-muted py-4">Không có dữ liệu.</div>
                                         <?php else: ?>
                                             <?php foreach ($top_categories_month as $i => $cat): ?>
-                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
-                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
-                                                </h6>
-                                                <div class="progress mb-2">
-                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
-                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="mb-3">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <h6 class="mb-0"><?php echo htmlspecialchars($cat['description']); ?></h6>
+                                                        <span class="badge bg-info"><?php echo $cat['count']; ?> lần</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: <?php echo min(100, $cat['count'] * 10); ?>%">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -290,16 +311,18 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                                     </div>
                                     <div class="tab-pane fade" id="all" role="tabpanel">
                                         <?php if (empty($top_categories_all)): ?>
-                                            <div class="text-center text-muted">Không có dữ liệu.</div>
+                                            <div class="text-center text-muted py-4">Không có dữ liệu.</div>
                                         <?php else: ?>
                                             <?php foreach ($top_categories_all as $i => $cat): ?>
-                                                <h6 class="small font-weight-bold mb-1"><?php echo htmlspecialchars($cat['description']); ?>
-                                                    <span class="float-end"><?php echo $cat['count']; ?> lần</span>
-                                                </h6>
-                                                <div class="progress mb-2">
-                                                    <div class="progress-bar bg-primary" role="progressbar"
-                                                        style="width: <?php echo min(100, $cat['count'] * 10); ?>%"
-                                                        aria-valuenow="<?php echo $cat['count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="mb-3">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <h6 class="mb-0"><?php echo htmlspecialchars($cat['description']); ?></h6>
+                                                        <span class="badge bg-primary"><?php echo $cat['count']; ?> lần</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar bg-primary" role="progressbar"
+                                                            style="width: <?php echo min(100, $cat['count'] * 10); ?>%">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -311,21 +334,27 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                     </div>
 
                     <!-- Top Violating Vehicles -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Phương tiện vi phạm nhiều nhất</h6>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-transparent border-0 py-3">
+                                <h5 class="card-title mb-0">Phương tiện vi phạm nhiều nhất</h5>
                             </div>
                             <div class="card-body">
                                 <?php foreach ($top_vehicles as $index => $vehicle): ?>
-                                    <h4 class="small font-weight-bold">
-                                        <?php echo htmlspecialchars($vehicle['license_plate']); ?> 
-                                        <span class="float-end"><?php echo $vehicle['violation_count']; ?> vi phạm</span>
-                                    </h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-<?php echo get_color_by_index($index); ?>" role="progressbar" 
-                                            style="width: <?php echo min(100, $vehicle['violation_count'] * 10); ?>%" 
-                                            aria-valuenow="<?php echo $vehicle['violation_count']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">
+                                                <i class="bi bi-car-front-fill me-2 text-<?php echo get_color_by_index($index); ?>"></i>
+                                                <?php echo htmlspecialchars($vehicle['license_plate']); ?>
+                                            </h6>
+                                            <span class="badge bg-<?php echo get_color_by_index($index); ?>">
+                                                <?php echo $vehicle['violation_count']; ?> vi phạm
+                                            </span>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-<?php echo get_color_by_index($index); ?>" role="progressbar" 
+                                                style="width: <?php echo min(100, $vehicle['violation_count'] * 10); ?>%">
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -336,6 +365,42 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
             </main>
         </div>
     </div>
+
+    <!-- Custom CSS -->
+    <style>
+        .bg-gray-100 {
+            background-color: #f8f9fa;
+        }
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .nav-pills .nav-link {
+            color: #6c757d;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .progress {
+            background-color: #e9ecef;
+        }
+        .table > :not(caption) > * > * {
+            padding: 1rem;
+        }
+        .badge {
+            padding: 0.5em 0.75em;
+        }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -349,19 +414,17 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                 datasets: [{
                     label: "Vi phạm",
                     lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
+                    backgroundColor: "rgba(13, 110, 253, 0.05)",
+                    borderColor: "rgba(13, 110, 253, 1)",
                     pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointBackgroundColor: "rgba(13, 110, 253, 1)",
+                    pointBorderColor: "rgba(13, 110, 253, 1)",
                     pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBackgroundColor: "rgba(13, 110, 253, 1)",
+                    pointHoverBorderColor: "rgba(13, 110, 253, 1)",
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [
-                        <?php echo implode(',', $violations_by_month); ?>
-                    ],
+                    data: [<?php echo implode(',', $violations_by_month); ?>],
                 }],
             },
             options: {
@@ -382,13 +445,14 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         ticks: {
                             maxTicksLimit: 5,
                             padding: 10
                         },
                         grid: {
-                            color: "rgb(234, 236, 244)",
-                            zeroLineColor: "rgb(234, 236, 244)",
+                            color: "rgba(0, 0, 0, 0.05)",
+                            zeroLineColor: "rgba(0, 0, 0, 0.05)",
                             drawBorder: false,
                             borderDash: [2],
                             zeroLineBorderDash: [2]
@@ -400,15 +464,16 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyColor: "#858796",
-                        titleMarginBottom: 10,
-                        titleColor: '#6e707e',
-                        titleFontSize: 14,
-                        borderColor: '#dddfeb',
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        bodyColor: "#6c757d",
+                        titleColor: '#212529',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        borderColor: '#dee2e6',
                         borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
+                        padding: 12,
                         displayColors: false,
                         intersect: false,
                         mode: 'index',
@@ -426,21 +491,25 @@ $top_categories_all = get_top_violation_categories($conn, 4, $selected_year);
                 labels: ["Online", "Offline", "Chưa thanh toán"],
                 datasets: [{
                     data: [<?php echo $payment_stats['online']; ?>, <?php echo $payment_stats['offline']; ?>, <?php echo $payment_stats['unpaid']; ?>],
-                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-                    hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
-                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    backgroundColor: ['#0d6efd', '#198754', '#0dcaf0'],
+                    hoverBackgroundColor: ['#0b5ed7', '#157347', '#0aa2c0'],
+                    hoverBorderColor: "rgba(255, 255, 255, 0.9)",
                 }],
             },
             options: {
                 maintainAspectRatio: false,
                 plugins: {
                     tooltip: {
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyColor: "#858796",
-                        borderColor: '#dddfeb',
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        bodyColor: "#6c757d",
+                        titleColor: '#212529',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        borderColor: '#dee2e6',
                         borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
+                        padding: 12,
                         displayColors: false,
                         caretPadding: 10,
                     },
