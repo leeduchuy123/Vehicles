@@ -1,0 +1,113 @@
+/* Custom styles for the vehicle lookup system */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.license-plate-display {
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  display: inline-block;
+  letter-spacing: 2px;
+}
+
+.qr-code-container {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* Custom card styling */
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+/* Custom button styling */
+.btn-primary {
+  background-color: blue;
+  border-color: blue;
+}
+
+.btn-primary:hover {
+  background-color: blue;
+  border-color: blue ;
+}
+
+/* Footer styling */
+footer {
+  margin-top: auto ;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .license-plate-display {
+    font-size: 18px;
+    padding: 8px 15px;
+  }
+}
+
+.news-sidebar .list-group-item.active {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: #000;
+}
+
+.news-sidebar .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.news-sidebar .list-group {
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d #f8f9fa;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar {
+    width: 6px;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.news-sidebar .list-group::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 3px;
+}
+
+.banner-left, .banner-right {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    height: 600px;
+    width: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.banner-left {
+    left: 0;
+}
+
+.banner-right {
+    right: 0;
+}
